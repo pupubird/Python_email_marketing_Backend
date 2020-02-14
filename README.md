@@ -1,4 +1,4 @@
-# Project Title
+# Python Email Marketing
 
 ## Table of Contents
 
