@@ -1,2 +1,0 @@
-Hi ${name},
-Here is your phone number ${phone}, and your email: ${email}
