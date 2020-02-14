@@ -11,9 +11,15 @@ class MainHandler(tornado.web.RequestHandler):
         self.render('index.html')
 
 
+class authenticateHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('email_content.html')
+
+
 handlers = [
     (r'/', MainHandler),
-    (r'/(.*)', web.StaticFileHandler, {'path': public_root}),
+    (r'/authenticate', authenticateHandler),
+    (r'/', web.StaticFileHandler, {'path': public_root}),
 ]
 
 settings = dict(
