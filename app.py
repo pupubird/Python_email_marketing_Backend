@@ -1,20 +1,27 @@
+import os
 import tornado.ioloop
-import tornado.web
+import tornado.web as web
+
+public_root = os.path.join(os.path.dirname(__file__), 'public')
 
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("Hello, world")
+        self.render('index.html')
 
 
-def make_app():
-    return tornado.web.Application([
-        (r"/", MainHandler),
-    ])
+handlers = [
+    (r'/', MainHandler),
+    (r'/(.*)', web.StaticFileHandler, {'path': public_root}),
+]
 
+settings = dict(
+    static_path=public_root,
+    template_path=public_root
+)
+
+application = web.Application(handlers, **settings)
 
 if __name__ == "__main__":
-    app = make_app()
-    app.listen(8888)
-    print("Listening on port 8888")
-    tornado.ioloop.IOLoop.current().start()
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
