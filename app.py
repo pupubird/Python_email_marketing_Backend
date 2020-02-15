@@ -2,8 +2,9 @@ import os
 import tornado.ioloop
 import tornado.web as web
 import webbrowser
+import start_smtp_server
 
-public_root = os.path.join(os.path.dirname(__file__), 'public')
+public_root = os.path.join(os.path.dirname(__file__), './public/')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -30,8 +31,9 @@ settings = dict(
 application = web.Application(handlers, **settings)
 
 if __name__ == "__main__":
-    print("Listening to port 8888")
-    application.listen(8888)
-    print("Server starts")
-    webbrowser.open_new_tab("http://localhost:8888/")
+    http_port = 7777
+    print(f"Starting HTTP Server at port {http_port}")
+    application.listen(http_port)
+    server = start_smtp_server.start_server()
+    webbrowser.open_new_tab(f"http://localhost:{http_port}/")
     tornado.ioloop.IOLoop.instance().start()
