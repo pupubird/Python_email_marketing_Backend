@@ -34,16 +34,19 @@ application = web.Application(handlers, **settings)
 
 if __name__ == "__main__":
 
-    print("Updating website content..")
+    print("------Updating website content..------")
 
+    # Automatically update the public folder
     frontend = git.cmd.Git('./public')
     frontend.pull()
 
+    print("------Updated website content.------")
+
+    # Clean up every file for later compiling
     files = os.listdir("./static")
     for file_name in files:
         os.remove("./static/"+file_name)
-    print("Updated website content.")
-
+    # compiling into a single html file
     compile_css_js_into_html.main()
 
     http_port = 7777
