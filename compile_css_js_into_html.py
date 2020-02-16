@@ -13,7 +13,6 @@ def main():
     for html in htmls:
         for file_name in files:
             insert_into_html(file_name, html)
-        print("________________________")
 
 
 def insert_into_html(file_name, html):
