@@ -4,6 +4,7 @@ import tornado.web as web
 import webbrowser
 import start_smtp_server
 import compile_css_js_into_html
+import git
 
 public_root = os.path.join(os.path.dirname(__file__), './static/')
 
@@ -34,6 +35,10 @@ application = web.Application(handlers, **settings)
 if __name__ == "__main__":
 
     print("Updating website content..")
+
+    frontend = git.cmd.Git('./public')
+    frontend.pull()
+
     files = os.listdir("./static")
     for file_name in files:
         os.remove("./static/"+file_name)
@@ -42,6 +47,14 @@ if __name__ == "__main__":
     compile_css_js_into_html.main()
 
     http_port = 7777
+    print("""
+    _________ __                 __   
+ /   _____//  |______ ________/  |_ 
+ \\_____  \\\\   __\\__  \\\\_  __ \\   __\\
+ /        \\|  |  / __ \\|  | \\/|  |  
+/_______  /|__| (____  /__|   |__|  
+        \\/           \\/             
+    """)
     print(f"Starting HTTP Server at port {http_port}")
     application.listen(http_port)
     server = start_smtp_server.start_server()
