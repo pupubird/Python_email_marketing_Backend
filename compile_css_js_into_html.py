@@ -1,6 +1,7 @@
 import os
 import re
 ROOT = "./public"
+TARGET = "./static"
 
 
 def main():
@@ -39,18 +40,25 @@ def insert_into_html(file_name, html):
             output += line
         output_template = f"<{tag}>{output}</{tag}>"
 
-        print(file_name, html)
-        with open(ROOT+"/"+html, 'r') as g:
-            html_string = ""
-            for line in g.readlines():
-                html_string += line
+        files = os.listdir(TARGET)
+        if html in files:
+            g = open(TARGET+"/"+html, 'r')
+            print("Compiling", TARGET+"/"+file_name, "into", html)
+        else:
+            g = open(ROOT+"/"+html, 'r')
+            print("Compiling", ROOT+"/"+file_name, "into", html)
 
-            index_head = html_string.index(target)
-            html_string = html_string[:index_head] + \
-                output_template + html_string[index_head:]
+        html_string = ""
+        for line in g.readlines():
+            html_string += line
 
-            with open(ROOT+"/"+html, 'w') as h:
-                h.writelines(html_string)
+        index_head = html_string.index(target)
+        html_string = html_string[:index_head] + \
+            output_template + html_string[index_head:]
+
+        with open(TARGET+"/"+html, 'w') as h:
+            h.writelines(html_string)
+        g.close()
 
 
 if __name__ == "__main__":
