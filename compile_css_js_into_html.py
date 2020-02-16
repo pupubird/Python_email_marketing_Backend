@@ -43,10 +43,10 @@ def insert_into_html(file_name, html):
         files = os.listdir(TARGET)
         if html in files:
             g = open(TARGET+"/"+html, 'r')
-            print("Compiling", TARGET+"/"+file_name, "into", html)
+            print("Compiling", ROOT+"/"+file_name, "into", TARGET+"/"+html)
         else:
             g = open(ROOT+"/"+html, 'r')
-            print("Compiling", ROOT+"/"+file_name, "into", html)
+            print("Compiling", ROOT+"/"+file_name, "into", ROOT+"/"+html)
 
         html_string = ""
         for line in g.readlines():

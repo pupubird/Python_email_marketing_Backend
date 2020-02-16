@@ -3,8 +3,9 @@ import tornado.ioloop
 import tornado.web as web
 import webbrowser
 import start_smtp_server
+import compile_css_js_into_html
 
-public_root = os.path.join(os.path.dirname(__file__), './public/')
+public_root = os.path.join(os.path.dirname(__file__), './static/')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -31,9 +32,20 @@ settings = dict(
 application = web.Application(handlers, **settings)
 
 if __name__ == "__main__":
+
+    print("Updating website content..")
+    files = os.listdir("./static")
+    for file_name in files:
+        os.remove("./static/"+file_name)
+    print("Updated website content.")
+
+    compile_css_js_into_html.main()
+
     http_port = 7777
     print(f"Starting HTTP Server at port {http_port}")
     application.listen(http_port)
     server = start_smtp_server.start_server()
+
     webbrowser.open_new_tab(f"http://localhost:{http_port}/")
+
     tornado.ioloop.IOLoop.instance().start()
