@@ -1,0 +1,4 @@
+gitdb2==3.0.2
+GitPython==3.0.8
+smmap2==2.0.5
+tornado==6.0.3
