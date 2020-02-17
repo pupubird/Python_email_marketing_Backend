@@ -3,7 +3,7 @@ import tornado.ioloop
 import tornado.web as web
 import webbrowser
 import start_smtp_server
-import compile_css_js_into_html
+import compile_external_html
 import git
 
 public_root = os.path.join(os.path.dirname(__file__), './static/')
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     for file_name in files:
         os.remove("./static/"+file_name)
     # compiling into a single html file
-    compile_css_js_into_html.main()
+    compile_external_html.main()
 
     http_port = 7777
     print("""
