@@ -8,7 +8,7 @@ import git
 
 public_root = os.path.join(os.path.dirname(__file__), './static/')
 ROOT = './public'
-OUTPUT_STATIC = './static'
+OUTPUT_STATIC = './static/'
 
 
 class MainHandler(tornado.web.RequestHandler):
