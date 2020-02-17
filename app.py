@@ -34,13 +34,14 @@ application = web.Application(handlers, **settings)
 
 if __name__ == "__main__":
 
-    print("------Updating website content..------")
-
     # Automatically update the public folder
     frontend = git.cmd.Git('./public')
+    print("Updating website content from ", frontend.remote(verbose=True).split("(fetch)")
+          [0].replace("origin\t", ""))
+
     frontend.pull()
 
-    print("------Updated website content.------")
+    print("Updated website content.")
 
     # Clean up every file for later compiling
     files = os.listdir("./static")
