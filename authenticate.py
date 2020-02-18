@@ -52,7 +52,7 @@ class Config:
 def authenticate(server, sender_email, password):
     try:
         server.login(sender_email, password)
-        config = Config()
+        config = Config
         config.Server = server
         config.Email = sender_email
     except smtplib.SMTPAuthenticationError:

@@ -26,7 +26,7 @@ class sendEmailsHandler(tornado.web.RequestHandler):
         # While yielding
 
         send_email(server, sender_email,
-                   'rainchai4240@gmail.com', subject, text, text)
+                   'frankeyc777@gmail.com', subject, text, text)
         self.write(
             'Check email! <a href="/">Click here to return to home page</a>')
 
