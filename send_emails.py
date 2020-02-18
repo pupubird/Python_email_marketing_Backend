@@ -27,8 +27,7 @@ class sendEmailsHandler(tornado.web.RequestHandler):
 
         send_email(server, sender_email,
                    'frankeyc777@gmail.com', subject, text, text)
-        self.write(
-            'Check email! <a href="/">Click here to return to home page</a>')
+        self.redirect('/')
 
     def csv_file(self):
         # open the csv file, save in self
