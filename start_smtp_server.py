@@ -8,6 +8,7 @@ def start_server():
     context = ssl.create_default_context()
     # SMTP server has to be at 465
     port = 465
-    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        print("Starting SMTP Server at", port)
-        return server
+
+    server = smtplib.SMTP_SSL("smtp.gmail.com", port, context=context)
+    print("Starting SMTP Server at", port)
+    return server
