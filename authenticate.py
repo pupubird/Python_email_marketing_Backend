@@ -14,7 +14,8 @@ class authenticateHandler(tornado.web.RequestHandler):
         if server:
             self.redirect('/edit')
         else:
-            self.write('<h1>Incorrect information</h1>')
+            self.set_status(400)
+            self.write({"status": 400})
 
 
 class Config:
@@ -26,6 +27,8 @@ class Config:
         return Config.__instance
 
     def __init__(self):
+        self.Server = None
+        self.Email = None
         if Config.__instance != None:
             raise Exception(
                 "Singleton class cannot be instantiate with more than one class")
@@ -50,12 +53,14 @@ class Config:
 
 
 def authenticate(server, sender_email, password):
+    config = Config
     try:
         server.login(sender_email, password)
-        config = Config
         config.Server = server
         config.Email = sender_email
     except smtplib.SMTPAuthenticationError:
+        config.Server = None
+        config.Email = None
         server.close()
         return None
     return server

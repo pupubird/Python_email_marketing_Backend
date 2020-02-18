@@ -14,7 +14,8 @@ class sendEmailsHandler(tornado.web.RequestHandler):
         sender_email = config.Email
 
         if not sender_email:
-            self.write('<h1> Unauthenticated action </h1>')
+            self.set_status(400)
+            self.write({"status": 400})
             return
 
         if self.request.files.get('media', False):
