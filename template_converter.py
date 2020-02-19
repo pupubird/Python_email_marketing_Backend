@@ -1,19 +1,5 @@
 import re
 
-template = """
-Please ${name}..
-Let it works...
-${[1.png]}
-please ${name}
-"""
-data = ["Rain", "rainchai4240@gmail.com"]
-columns = ["name", "email"]
-request = {
-    "media": [
-        {"filename": "1.png"}
-    ]
-}
-
 
 def convert_into_html(template, data, columns, **kwargs):
 
@@ -64,6 +50,3 @@ def convert_into_html(template, data, columns, **kwargs):
     for line in output:
         output_html += line+"\n"
     return output_html
-
-
-convert_into_html(template, data, columns, media_files=request)
