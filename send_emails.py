@@ -122,4 +122,3 @@ class sendEmailsHandler(tornado.web.RequestHandler):
         server.sendmail(
             sender_email, receiver_email, message.as_string()
         )
-        print("Done")

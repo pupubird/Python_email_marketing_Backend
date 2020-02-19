@@ -20,9 +20,13 @@ def convert_into_html(template, data, columns, **kwargs):
     def get_media_file(media_name):
         # return the <img> tag for the media_name
         for i in range(len(kwargs['media_files']['media'])):
-            if kwargs['media_files']['media'][i]['filename'] == media_name:
+
+            contenttype = kwargs["media_files"]["media"][i]["content_type"]
+            contenttype = contenttype.split("/")
+
+            if kwargs['media_files']['media'][i]['filename'] == media_name and contenttype[0] == "image":
                 media_name = media_name.replace(" ", "")
-                output = '<p><img src="cid:'+media_name+'" width="500" height="500"></p>'
+                output = '<p><img src="cid:'+media_name+'"></p>'
                 return output
 
     output_data = {}
