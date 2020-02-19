@@ -49,7 +49,6 @@ def convert_into_html(template, data, columns, **kwargs):
                 if not re.findall("\${.+?}", line):
                     output.append(line)
     output_html = ""
-    print(output)
     for line in output:
         output_html += line+"\n"
     return output_html
