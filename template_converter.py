@@ -1,6 +1,11 @@
 import re
 
-template = "${name} ${email} ${[1.png]} ${name} ${name}"
+template = """
+Please ${name}..
+Let it works...
+${[1.png]}
+please ${name}
+"""
 data = ["Rain", "rainchai4240@gmail.com"]
 columns = ["name", "email"]
 request = {
@@ -29,27 +34,28 @@ def convert_into_html(template, data, columns, **kwargs):
     for line in lines:
         # search for ${ any words }
         results = re.findall("\${.+?}", line)
-        for result in results:
-            # remove ${ }
-            required_data = re.sub("\${", "", result, 1)
-            required_data = re.sub("}", "", required_data, 1)
+        if results:
+            for result in results:
+                # remove ${ }
+                required_data = re.sub("\${", "", result, 1)
+                required_data = re.sub("}", "", required_data, 1)
 
-            # if its a media, [] exists
-            if re.search('[.*]', result):
-                required_data = required_data.replace("[", "").replace("]", "")
-                media = get_media_file(required_data)
-                line = line.replace(result, media, 1)
-                if not re.findall("\${[.+?]}", line) and not re.findall("\${.+?}", line):
-                    output.append(line)
-                continue
-
-            # see if the template required data matches in the dictionary passed down
-            if output_data.get(required_data, False) != False:
-                line = line.replace(result, output_data[required_data], 1)
-                # only append when there is no match anymore, to avoid duplicate
-                if not re.findall("\${.+?}", line) and not re.findall("\${[.+?]}", line):
-                    output.append(line)
-    print(output)
+                # if its a media, [] exists
+                if re.search('[.*]', result):
+                    required_data = required_data.replace(
+                        "[", "").replace("]", "")
+                    media = get_media_file(required_data)
+                    line = line.replace(result, media, 1)
+                    if not re.findall("\${[.+?]}", line) and not re.findall("\${.+?}", line):
+                        output.append(line)
+                # see if the template required data matches in the dictionary passed down
+                elif output_data.get(required_data, False) != False:
+                    line = line.replace(result, output_data[required_data], 1)
+                    # only append when there is no match anymore, to avoid duplicate
+                    if not re.findall("\${.+?}", line) and not re.findall("\${[.+?]}", line):
+                        output.append(line)
+        else:
+            output.append(line)
     output_html = ""
     for line in output:
         output_html += line+"\n"
