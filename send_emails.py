@@ -102,6 +102,13 @@ class sendEmailsHandler(tornado.web.RequestHandler):
             # add MIMEBase object to MIMEMultipart object
             message.attach(mime)
 
+    def attach_custom_attachments(self, message, **kwargs):
+        # 1. Get matching parameter
+        # 2. Extract zip
+        # 3. See which file match
+        # 4. Attach
+        pass
+
     def send_email(self, server, sender_email, receiver_email, subject, text, html, **kwargs):
         message = MIMEMultipart("alternative")
         message["Subject"] = subject
