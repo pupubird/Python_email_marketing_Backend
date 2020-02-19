@@ -53,7 +53,7 @@ class Config:
 
 
 def authenticate(server, sender_email, password):
-    config = Config
+    config = Config.getInstance()
     try:
         server.login(sender_email, password)
         config.Server = server
