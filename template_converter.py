@@ -1,6 +1,6 @@
 import re
 
-template = "${name} ${email} ${name} ${name} ${name}"
+template = "${name} ${email} ${[1.png]} ${name} ${name}"
 data = ["Rain", "rainchai4240@gmail.com"]
 columns = ["name", "email"]
 request = {
@@ -39,15 +39,17 @@ def convert_into_html(template, data, columns, **kwargs):
                 required_data = required_data.replace("[", "").replace("]", "")
                 media = get_media_file(required_data)
                 line = line.replace(result, media, 1)
-                if not re.findall("\${[.+?]}", line):
+                if not re.findall("\${[.+?]}", line) and not re.findall("\${.+?}", line):
                     output.append(line)
+                continue
 
             # see if the template required data matches in the dictionary passed down
             if output_data.get(required_data, False) != False:
                 line = line.replace(result, output_data[required_data], 1)
                 # only append when there is no match anymore, to avoid duplicate
-                if not re.findall("\${.+?}", line):
+                if not re.findall("\${.+?}", line) and not re.findall("\${[.+?]}", line):
                     output.append(line)
+    print(output)
     output_html = ""
     for line in output:
         output_html += line+"\n"
