@@ -183,6 +183,6 @@ class sendEmailsHandler(tornado.web.RequestHandler):
         server.sendmail(
             sender_email, receiver_email, message.as_string()
         )
-        if receiver_email = sender_email:
+        if receiver_email == sender_email:
             return False
         return True
