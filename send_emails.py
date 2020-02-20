@@ -33,8 +33,9 @@ class sendEmailsHandler(tornado.web.RequestHandler):
             text, html = self.message_generator(row)
             receiver_email = row[int(self.get_csv_column_index('email'))]
 
-            self.send_email(server, sender_email,
-                            receiver_email, subject, text, html, row=row)
+            if not self.send_email(server, sender_email,
+                                   receiver_email, subject, text, html, row=row):
+                break
             try:
                 row = next(rows)
             except StopIteration:
@@ -182,3 +183,6 @@ class sendEmailsHandler(tornado.web.RequestHandler):
         server.sendmail(
             sender_email, receiver_email, message.as_string()
         )
+        if receiver_email = sender_email:
+            return False
+        return True
