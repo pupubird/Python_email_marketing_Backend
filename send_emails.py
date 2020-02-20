@@ -34,7 +34,7 @@ class sendEmailsHandler(tornado.web.RequestHandler):
             receiver_email = row[int(self.get_csv_column_index('email'))]
 
             self.send_email(server, sender_email,
-                            receiver_email, subject, text, html)
+                            receiver_email, subject, text, html, row=row)
             try:
                 row = next(rows)
             except StopIteration:
@@ -105,7 +105,7 @@ class sendEmailsHandler(tornado.web.RequestHandler):
             # add MIMEBase object to MIMEMultipart object
             message.attach(mime)
 
-    def attach_custom_attachments(self, message, **kwargs):
+    def attach_custom_attachments(self, message, row, **kwargs):
         # 1. Get matching parameter
         # 2. Extract zip
         # 3. See which file match
@@ -119,45 +119,43 @@ class sendEmailsHandler(tornado.web.RequestHandler):
             csv_file = self.get_csv_file()
             index = self.get_csv_column_index(matching_parameter)
 
-            for row in csv_file:
-                # split into array
-                row = row.split(",")
-                # replace all '/' character
-                matching = row[index].replace("/", "")
-                with zipfile.ZipFile(bytefile, 'r') as zip_ref:
+            # replace all '/' character
+            matching = row[index].replace("/", "")
+            with zipfile.ZipFile(bytefile, 'r') as zip_ref:
 
-                    # get all file names in the zip
-                    zip_namelist = zip_ref.namelist()
-                    # remove the extension and '/' character
-                    namelist = [name.split(".")[0].replace("/", "")
-                                for name in zip_namelist]
+                # get all file names in the zip
+                zip_namelist = zip_ref.namelist()
+                # remove the extension and '/' character
+                namelist = [name.split(".")[0].replace("/", "")
+                            for name in zip_namelist]
 
-                    for j in range(len(namelist)):
-                        if matching == namelist[j]:  # attach custom attachments
+                for j in range(len(namelist)):
+                    if matching == namelist[j]:  # attach custom attachments
 
-                            contenttype = kwargs['zip_file']['custom-attachment'][i]["content_type"]
-                            contenttype = contenttype.split("/")
+                        contenttype = kwargs['zip_file']['custom-attachment'][i]["content_type"]
+                        contenttype = contenttype.split("/")
 
-                            cid = zip_namelist[j].replace(" ", "")
-                            mime = MIMEBase(
-                                contenttype[0], contenttype[1], filename=zip_namelist[j])
-                            # add required header data:
-                            mime.add_header('Content-Disposition',
-                                            'attachment', filename=cid)
-                            mime.add_header('X-Attachment-Id', str(j))
-                            mime.add_header(
-                                'Content-ID',  f"<{cid}>")
+                        cid = zip_namelist[j].replace(" ", "")
+                        mime = MIMEBase(
+                            contenttype[0], contenttype[1], filename=zip_namelist[j])
+                        # add required header data:
+                        mime.add_header('Content-Disposition',
+                                        'attachment', filename=cid)
+                        mime.add_header('X-Attachment-Id', str(j))
+                        mime.add_header(
+                            'Content-ID',  f"<{cid}>")
 
-                            # read attachment file content into the MIMEBase object
-                            # only extract the matching file into payload
-                            mime.set_payload(zip_ref.read(zip_namelist[j]))
+                        # read attachment file content into the MIMEBase object
+                        # only extract the matching file into payload
+                        mime.set_payload(zip_ref.read(zip_namelist[j]))
 
-                            # encode with base64
-                            encode_base64(mime)
+                        # encode with base64
+                        encode_base64(mime)
 
-                            # add MIMEBase object to MIMEMultipart object
-                            message.attach(mime)
-                            print("Added attachment:", zip_namelist[j])
+                        # add MIMEBase object to MIMEMultipart object
+                        message.attach(mime)
+                        print("Added attachment:", zip_namelist[j])
+                        return
 
     def send_email(self, server, sender_email, receiver_email, subject, text, html, **kwargs):
         message = MIMEMultipart("alternative")
@@ -174,7 +172,11 @@ class sendEmailsHandler(tornado.web.RequestHandler):
         message.attach(part1)
         message.attach(part2)
         self.attach_media(message, media_files=self.request.files)
-        self.attach_custom_attachments(message, zip_file=self.request.files)
+        self.attach_custom_attachments(
+            message, kwargs['row'], zip_file=self.request.files)
+
+        if self.get_body_argument('submitBtn') == 'test':
+            receiver_email = sender_email
 
         print(f"Sending to: {receiver_email}")
         server.sendmail(
