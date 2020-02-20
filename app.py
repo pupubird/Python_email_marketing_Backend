@@ -50,8 +50,11 @@ if __name__ == "__main__":
     print("Updated website content.")
 
     # Clean up every file for later compiling
-    os.makedirs(OUTPUT_STATIC,exist_ok=True)
-    
+    os.makedirs(OUTPUT_STATIC, exist_ok=True)
+    for filename in os.listdir(OUTPUT_STATIC):
+        if '.html' in filename:
+            os.remove(OUTPUT_STATIC+filename)
+
     # compiling into a single html file
     compile_external_html.main()
 
