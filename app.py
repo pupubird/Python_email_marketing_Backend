@@ -9,9 +9,9 @@ import send_emails
 import authenticate
 import editPageHandler
 
-public_root = os.path.join(os.path.dirname(__file__), './static/')
-ROOT = './public'
-OUTPUT_STATIC = './static/'
+public_root = os.path.dirname(os.path.realpath(__file__)) + r'\\static\\'
+ROOT = os.path.dirname(os.path.realpath(__file__)) + r'\\public\\'
+OUTPUT_STATIC = os.path.dirname(os.path.realpath(__file__)) + r'\\static\\'
 
 
 class MainHandler(tornado.web.RequestHandler):
