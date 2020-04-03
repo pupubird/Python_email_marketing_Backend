@@ -8,6 +8,8 @@ import git
 import send_emails
 import authenticate
 import editPageHandler
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) # python-3.8.0a4
 
 public_root = os.path.dirname(os.path.realpath(__file__)) + r'\\static\\'
 ROOT = os.path.dirname(os.path.realpath(__file__)) + r'\\public\\'
