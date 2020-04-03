@@ -4,7 +4,6 @@ import tornado.web as web
 import webbrowser
 import start_smtp_server
 import compile_external_html
-import git
 import send_emails
 import authenticate
 import editPageHandler
@@ -12,7 +11,7 @@ import asyncio
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) # python-3.8.0a4
 
 public_root = os.path.dirname(os.path.realpath(__file__)) + r'\\static\\'
-ROOT = os.path.dirname(os.path.realpath(__file__)) + r'\\public\\'
+ROOT = os.path.dirname(os.path.realpath(__file__)) + r'\\root\\'
 OUTPUT_STATIC = os.path.dirname(os.path.realpath(__file__)) + r'\\static\\'
 
 
@@ -36,20 +35,6 @@ settings = dict(
 
 if __name__ == "__main__":
     application = web.Application(handlers, **settings)
-
-    # Automatically update git
-    backend = git.cmd.Git('.')
-    print("Updating server content from", backend.remote(
-        verbose=True).split("(fetch")[0].replace("origin\t", ""))
-    backend.pull()
-    print("Updated backend server content")
-
-    frontend = git.cmd.Git(ROOT)
-    print("Updating website content from", frontend.remote(verbose=True).split("(fetch)")
-          [0].replace("origin\t", ""))
-    frontend.pull()
-
-    print("Updated website content.")
 
     # Clean up every file for later compiling
     os.makedirs(OUTPUT_STATIC, exist_ok=True)

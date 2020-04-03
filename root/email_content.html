@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="email_content.css" />
+    <title>Create E-mail Template</title>
+  </head>
+  <body>
+    <form
+      enctype="multipart/form-data"
+      class="card container"
+      action="/sendEmails"
+      method="POST"
+      id="catcher"
+    >
+      <div class="email_subject">
+        <label for="email_subject">E-mail Subject:</label>
+        <input
+          type="text"
+          name="subject_field"
+          id="subject_field"
+          autofocus
+          required
+        />
+      </div>
+      <div class="email_content">
+        <label for="email_content">E-mail Content:</label>
+        <textarea
+          name="content_field"
+          id="input_content"
+          oninput="seeOutput()"
+        ></textarea>
+        <div id="varFromCsv" class="var_from_csv"></div>
+        <div class="upload_csv">
+          <label class="smaller_text">.csv file:</label>
+          <input type="file" accept=".csv" id="dealCsv" name="targets_csv" />
+        </div>
+        <div class="upload_image">
+          <label class="smaller_text">image:</label>
+          <input name="media" multiple type="file" id="my-image" />
+          <img />
+        </div>
+        <div>
+          <label class="attachment_upload smaller_text">attachment:</label>
+          <input name="media" multiple type="file" id="my-attachment" />
+        </div>
+        <div id="upload_custom_attachment">
+          <label class="attachment_upload smaller_text"
+            >custom attachemnt:</label
+          >
+          <input
+            name="custom-attachment"
+            accept=".zip"
+            type="file"
+            id="my-custom-attachment"
+          />
+        </div>
+      </div>
+      <div class="sample_output">
+        <label for="sample_output">Sample output:</label>
+        <div
+          id="output_content"
+          class="output_content"
+          name="email_content_field"
+        ></div>
+      </div>
+      <div class="button_holder send_button">
+        <input type="submit" value="test" name="submitBtn" id="testBtn" />
+        <input type="submit" value="send" name="submitBtn" />
+      </div>
+    </form>
+    <script src="config.js"></script>
+    <script src="insertAtCaret.js"></script>
+    <script src="uploadCsv.js"></script>
+    <script src="uploadImg.js"></script>
+    <script src="uploadAttachment.js"></script>
+    <script src="showLoader.js"></script>
+    <script src="email_content.js"></script>
+  </body>
+</html>

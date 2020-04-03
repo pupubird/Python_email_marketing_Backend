@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="index.css" rel="stylesheet" />
+    <title>Email Marketing Tool</title>
+  </head>
+  <body>
+    <div class="card">
+      <form action="/authenticate" method="POST">
+        <label for="sender_email">Sender E-mail Address:</label>
+        <input type="email" name="sender_email_field" required autofocus/>
+        <br />
+
+        <label for="app_password">App Password:</label>
+        <input type="password" name="app_password_field" required/>
+        <br />
+        <div class="button_holder">
+          <input type="submit" value="Next" />
+        </div>
+      </form>
+      <a
+        href="https://support.google.com/accounts/answer/185833?hl=en"
+        target="_blank"
+        >How to get your app password for Gmail?</a
+      >
+      <br />
+      <a
+        href="https://support.microsoft.com/en-my/help/12409/microsoft-account-app-passwords-and-two-step-verification"
+        target="_blank"
+        >How to get your app password for Hotmail?</a
+      >
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
