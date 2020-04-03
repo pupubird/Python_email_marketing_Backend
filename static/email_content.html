@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>@import url('https://fonts.googleapis.com/css?family=Muli:400,500,700&display=swap');
+
+:root {
+  font-family: 'Muli',"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0%;
+  margin: 0;
+}
+
+.card {
+  border-radius: 15;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  min-width: 20vw;
+  min-height: auto;
+  margin: auto 20px;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 30px;
+  justify-content: center;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+  font-size: 14px;
+}
+
+input[type="submit"] {
+  background-color: rgb(76, 102, 175);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 30%;
+  font-size: 15px;
+}
+
+input[type="submit"]:hover {
+  background-color: rgb(20, 228, 103);
+}
+
+.button_holder {
+  text-align: center;
+  padding: 30px 0;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(76, 102, 175);
+  font-size: small;
+}
+
+a:visited {
+  color: rgb(76, 102, 175);
+}
+
+a:hover {
+  color: rgb(20, 228, 103);
+}
+
+.header-card {
+  width: 100%;
+  height: 5%;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-bottom: 30px;
+}
+
+h1 {
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+</style>
+    <style>.container {
+  display: grid;
+  grid-template-areas:
+    "subject output"
+    "content output"
+    "var output"
+    "upload send";
+  grid-template-columns: 50% 50%;
+  width: 80%;
+  padding-top: 10px;
+  padding-bottom: 15px;
+}
+.email_content {
+  grid-area: content;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+.var_from_csv {
+  grid-area: var;
+}
+
+.upload_csv {
+  grid-area: upload;
+}
+
+.sample_output {
+  grid-area: output;
+}
+
+.email_subject {
+  grid-area: subject;
+  margin-right: 20px;
+}
+
+.send_button {
+  grid-area: send;
+  padding: 0;
+}
+
+input[type="button"] {
+  background-color: rgb(76, 102, 175);
+  color: white;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+input[type="button"]:hover {
+  background-color: rgb(143, 148, 218);
+}
+
+input[type="button"] {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 4px 15px;
+}
+
+textarea {
+  height: 350px;
+}
+
+.output_content {
+  font-size: 13px;
+  background-color: white;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: none;
+  margin-bottom: 20px;
+}
+
+.smaller_text {
+  font-size: 13px;
+}
+
+.blur_background {
+  background-color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+}
+
+.contain {
+  margin: auto;
+  text-align: center;
+}
+
+.loader {
+  text-align: center;
+  height: 100%;
+  opacity: 1;
+  border: 16px solid #e4e4e4;
+  border-radius: 50%;
+  border-top: 16px solid rgb(76, 102, 175);
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
+    <title>Create E-mail Template</title>
+  </head>
+  <body>
+    <form
+      enctype="multipart/form-data"
+      class="card container"
+      action="/sendEmails"
+      method="POST"
+      id="catcher"
+    >
+      <div class="email_subject">
+        <label for="email_subject">E-mail Subject:</label>
+        <input
+          type="text"
+          name="subject_field"
+          id="subject_field"
+          autofocus
+          required
+        />
+      </div>
+      <div class="email_content">
+        <label for="email_content">E-mail Content:</label>
+        <textarea
+          name="content_field"
+          id="input_content"
+          oninput="seeOutput()"
+        ></textarea>
+        <div id="varFromCsv" class="var_from_csv"></div>
+        <div class="upload_csv">
+          <label class="smaller_text">.csv file:</label>
+          <input type="file" accept=".csv" id="dealCsv" name="targets_csv" />
+        </div>
+        <div class="upload_image">
+          <label class="smaller_text">image:</label>
+          <input name="media" multiple type="file" id="my-image" />
+          <img />
+        </div>
+        <div>
+          <label class="attachment_upload smaller_text">attachment:</label>
+          <input name="media" multiple type="file" id="my-attachment" />
+        </div>
+        <div id="upload_custom_attachment">
+          <label class="attachment_upload smaller_text"
+            >custom attachemnt:</label
+          >
+          <input
+            name="custom-attachment"
+            accept=".zip"
+            type="file"
+            id="my-custom-attachment"
+          />
+        </div>
+      </div>
+      <div class="sample_output">
+        <label for="sample_output">Sample output:</label>
+        <div
+          id="output_content"
+          class="output_content"
+          name="email_content_field"
+        ></div>
+      </div>
+      <div class="button_holder send_button">
+        <input type="submit" value="test" name="submitBtn" id="testBtn" />
+        <input type="submit" value="send" name="submitBtn" />
+      </div>
+    </form>
+    <script>class Config {
+    constructor() {
+        if(!Config.instance) {
+            this._csvHeader = []
+            this._csvData = []
+            this._csvFormatedHeader = []
+            this._imgUrl = []
+            this._imgFormatedUrl = []
+            this._mediaList = []
+            Config.instance = this
+        }
+        
+        return Config.instance
+    }
+    get csvHeader(){
+        return this._csvHeader
+    }
+
+    get csvData(){
+        return this._csvData
+    }
+
+    get csvFormatedHeader(){
+        return this._csvFormatedHeader
+    }
+
+    get imgUrl(){
+        return this._imgUrl
+    }
+
+    get imgFormatedUrl(){
+        return this._imgFormatedUrl
+    }
+
+    get mediaList(){
+        return this._mediaList
+    }
+
+    set csvHeader(new_csvHeader) {
+        this._csvHeader = new_csvHeader
+    }
+
+    set csvData(new_csvData) {
+        this._csvData = new_csvData
+    }
+
+    set csvFormatedHeader(new_csvFormatedHeader) {
+        this._csvFormatedHeader = new_csvFormatedHeader
+    }
+
+    set imgUrl(new_imgUrl) {
+        this._imgUrl = new_imgUrl
+    }
+
+    set imgFormatedUrl(new_imgFormatedUrl) {
+        this._imgFormatedUrl = new_imgFormatedUrl
+    }
+
+    set mediList(new_mediaList) {
+        this._mediaList = new_mediaList
+    }
+}</script>
+    <script>function insertAtCaret(areaId, text) {
+    var txtarea = document.getElementById(areaId);
+    var scrollPos = txtarea.scrollTop;
+    var strPos = 0;
+    var br =
+      txtarea.selectionStart || txtarea.selectionStart == "0"
+        ? "ff"
+        : document.selection
+        ? "ie"
+        : false;
+    if (br == "ie") {
+      txtarea.focus();
+      var range = document.selection.createRange();
+      range.moveStart("character", -txtarea.value.length);
+      strPos = range.text.length;
+    } else if (br == "ff") strPos = txtarea.selectionStart;
+  
+    var front = txtarea.value.substring(0, strPos);
+    var back = txtarea.value.substring(strPos, txtarea.value.length);
+    txtarea.value = front + text + back;
+    strPos = strPos + text.length;
+    if (br == "ie") {
+      txtarea.focus();
+      var range = document.selection.createRange();
+      range.moveStart("character", -txtarea.value.length);
+      range.moveStart("character", strPos);
+      range.moveEnd("character", 0);
+      range.select();
+    } else if (br == "ff") {
+      txtarea.selectionStart = strPos;
+      txtarea.selectionEnd = strPos;
+      txtarea.focus();
+    }
+    txtarea.scrollTop = scrollPos;
+  }</script>
+    <script>class UploadCsv {
+    constructor() {
+        this.Config = new Config()
+        let input = document.getElementById("dealCsv");
+        input.addEventListener("change", (e) => {
+            if (input.files && input.files[0]) {
+            var myFile = input.files[0];
+            var reader = new FileReader();
+
+            reader.addEventListener("load", (e) => {
+                let csvdata = e.target.result;
+                this.createHeaderBtn(csvdata); // calling function for parse csv data
+            });
+
+            reader.readAsBinaryString(myFile);
+            }
+        });
+
+    }
+    createHeaderBtn(data) {
+        let parsedata = [];
+
+        let newLinebrk = data.split("\n");
+        for (let i = 0; i < newLinebrk.length; i++) {
+            parsedata.push(newLinebrk[i].split(","));
+        }
+
+        /* Generate button based on parsedata */
+        for (let i = 0; i < parsedata[0].length; i++) {
+            let button = document.createElement("input");
+            let tempHeader = parsedata[0][i];
+            let tempData = parsedata[1][i];
+            tempHeader = tempHeader.split("\r").join("")
+            tempHeader = tempHeader.split("\n").join("")
+            let formatedHeader = "${" + tempHeader + "}";
+
+            this.Config.csvHeader.push(tempHeader);
+            this.Config.csvFormatedHeader.push(formatedHeader);
+            this.Config.csvData.push(tempData);
+            
+            button.type = "button";
+            button.id = i;
+            button.value = tempHeader;
+            button.onclick = function() {
+            insertAtCaret("input_content", formatedHeader);
+            seeOutput()
+            };
+            document.getElementById("varFromCsv").append(button);
+        }
+        return this.Config.csvData, this.Config.csvHeader, this.Config.csvFormatedHeader;
+    };
+}</script>
+    <script>let imageInput = document
+  .getElementById("my-image")
+  .addEventListener("change", uploadImg);
+
+function uploadImg() {
+  let config = new Config();
+  /* Method to create Image button */
+    for (let i = 0; i < this.files.length; i++) {
+        if (this.files && this.files[i].name) {
+        config.imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
+        let button = document.createElement("input");
+        let imgName = this.files[i].name;
+        let formatedImageTag = "${[" + imgName + "]}";
+
+        config.mediaList.push(this.files[i]);
+        config.imgFormatedUrl.push(formatedImageTag);
+        button.type = "button";
+        button.id = imgName;
+        button.value = imgName;
+        button.onclick = function() {
+            insertAtCaret("input_content", formatedImageTag);
+            seeOutput()
+        };
+        document.getElementById("varFromCsv").append(button);
+        }
+    }
+}
+</script>
+    <script>document.getElementById("my-attachment").addEventListener("change", function() {
+  config = new Config();
+  for (let i = 0; i < this.files.length; i++) {
+    config.mediaList.push(this.files[i]);
+  }
+  return config.mediaList;
+});
+
+document
+  .getElementById("my-custom-attachment")
+  .addEventListener("change", function() {
+    let config = new Config()
+    let upload_custom_attachment = document.getElementById(
+      "upload_custom_attachment"
+    );
+    let radio_div = document.createElement("div");
+    for (let i = 0; i < config.csvHeader.length; i++) {
+      let radio = document.createElement("input");
+      let radio_label = document.createElement("label");
+      let radio_text = document.createTextNode(config.csvHeader[i]);
+      radio.type = "radio";
+      radio.id = "radio_" + config.csvHeader[i];
+      radio.name = "selected_header";
+      radio.value = config.csvHeader[i];
+      radio_label.setAttribute("for", config.csvHeader[i]);
+      radio_label.className = "smaller_text";
+      radio_label.appendChild(radio_text);
+      radio_div.appendChild(radio);
+      radio_div.appendChild(radio_label);
+      
+      upload_custom_attachment.append(radio_div);
+    }
+  });
+</script>
+    <script>function showLoader() {
+  let blurBackground = document.createElement("div");
+  let contain = document.createElement("div");
+  let loader = document.createElement("div");
+  let sending = document.createElement("p");
+  let sendingMsg = document.createTextNode("Sending...");
+
+  blurBackground.className = "blur_background";
+  contain.className = "contain";
+  loader.className = "loader";
+  contain.style.color = "rgb(76, 102, 175)";
+
+  sending.appendChild(sendingMsg);
+  contain.appendChild(loader);
+  contain.appendChild(sending);
+  blurBackground.appendChild(contain);
+  document.querySelector("body").appendChild(blurBackground);
+}
+</script>
+    <script>var catcher = document.getElementById("catcher");
+
+/* Hijack form data, use AJAX to send */
+catcher.addEventListener("submit", function(evnt) {
+  showLoader();
+  evnt.preventDefault();
+  var formData = new FormData();
+  let config = new Config();
+  let request = new XMLHttpRequest();
+  let subject_field = document.getElementById("subject_field").value;
+  let content_field = document.getElementById("input_content").value;
+  let targets_csv = document.getElementById("dealCsv").files[0];
+  let custom_attachment = document.getElementById("my-custom-attachment")
+    .files[0];
+  let selected_header = document.querySelector(
+    'input[name="selected_header"]:checked'
+  ).value;
+  let submitBtn = document.getElementById("testBtn").value;
+
+  formData.append("subject_field", subject_field);
+  formData.append("content_field", content_field);
+  formData.append("targets_csv", targets_csv);
+  formData.append("custom-attachment", custom_attachment);
+  formData.append("selected_header", selected_header);
+  formData.append("submitBtn", submitBtn);
+  config.mediaList.forEach(function(file) {
+    formData.append("media", file);
+  });
+
+  request.open("POST", "/sendEmails");
+
+  request.onload = res => {
+    if (res.target.status == 200) {
+      alert("All emails sent");
+      catcher.reset();
+      location.reload();
+    }
+  };
+
+  request.send(formData);
+});
+
+/* Method to see the sample output */
+function seeOutput() {
+  let config = new Config();
+  let output = document.getElementById("output_content");
+  let input = document
+    .getElementById("input_content")
+    .value.split("\n")
+    .join("<br>");
+  output.style.display = "block";
+
+  for (let i = 0; i < config.csvFormatedHeader.length; i++) {
+    //Replace each ${} with respective sample data
+    var searchString = input.search(config.csvFormatedHeader[i]); //Check if any ${} exist
+    var changeVariable = input
+      .split(config.csvFormatedHeader[i])
+      .join(config.csvData[i]);
+    input = changeVariable;
+  }
+
+  for (let i = 0; i < config.imgFormatedUrl.length; i++) {
+    //Replace each ${} with respective sample data
+    var searchImage = input.search(config.imgFormatedUrl[i]); //Check if any ${} exist
+    var changeVariable = input
+      .split(config.imgFormatedUrl[i])
+      .join("<img src=" + config.imgUrl[i] + " style='max-width: 100%'>");
+    input = changeVariable;
+  }
+
+  if (searchString || searchImage) {
+    output.innerHTML = changeVariable;
+  } else {
+    output.innerHTML = input;
+  }
+
+  // change status to focus for input content
+  document.getElementById("input_content").focus();
+}
+
+new UploadCsv();
+</script>
+  </body>
+</html>
