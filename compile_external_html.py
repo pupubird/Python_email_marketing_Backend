@@ -1,8 +1,8 @@
 import re
 import os
 
-ROOT = os.path.dirname(os.path.realpath(__file__)) + r'\\public\\'
-OUTPUT = os.path.dirname(os.path.realpath(__file__)) + r'\\static\\'
+ROOT = os.path.dirname(os.path.realpath(__file__)) + '\\root\\'
+OUTPUT = os.path.dirname(os.path.realpath(__file__)) + '\\static\\'
 
 
 def replace_element(search_result, html_filename):
