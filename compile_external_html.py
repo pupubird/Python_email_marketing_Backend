@@ -1,7 +1,8 @@
 import re
 import os
 
-ROOT = os.path.dirname(os.path.realpath(__file__)) + '\\root\\'
+ROOT = os.path.dirname(os.path.realpath(__file__)) + \
+    '\\Python_email_marketing_Frontend\\'
 OUTPUT = os.path.dirname(os.path.realpath(__file__)) + '\\static\\'
 
 
