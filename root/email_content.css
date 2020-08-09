@@ -1,3 +1,9 @@
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120vh;
+}
 .container {
   display: grid;
   grid-template-areas:
