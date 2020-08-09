@@ -14,7 +14,8 @@ catcher.addEventListener("submit", function(evnt) {
     .files[0];
   let selected_header = document.querySelector(
     'input[name="selected_header"]:checked'
-  ).value;
+  );
+  selected_header = selected_header ? selected_header.value:'';
   let submitBtn = document.getElementById("testBtn").value;
 
   formData.append("subject_field", subject_field);
